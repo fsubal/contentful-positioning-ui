@@ -1,0 +1,8 @@
+{
+  "id": "contentful-positioning-ui",
+  "name": "contentful-positioning-ui",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Object"
+  ]
+}
