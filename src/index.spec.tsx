@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import * as React from 'react'
+import React from 'react'
 import { FieldExtensionSDK } from 'contentful-ui-extensions-sdk'
 import { App } from './index'
 import { render, fireEvent, cleanup, configure } from '@testing-library/react'
