@@ -1,43 +1,58 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react'
-import { render } from 'react-dom'
-import { init, FieldExtensionSDK } from 'contentful-ui-extensions-sdk'
 import '@contentful/forma-36-react-components/dist/styles.css'
 import './index.css'
 
+import React, { useState } from 'react'
+import { render } from 'react-dom'
+import { init } from 'contentful-ui-extensions-sdk'
+import { useSDKSetup, useSVGDraggable } from './hooks'
+import { FieldExtensionSDK, Coordinate } from './types'
+
 interface Props {
-  sdk: FieldExtensionSDK
+  sdk: FieldExtensionSDK<Coordinate>
+  width?: number
+  height?: number
+  initial?: Coordinate
 }
 
-export function App({ sdk }: Props) {
-  const [value, setValue] = useState(sdk.field.getValue() || '')
-  const detach = useRef<Function>(sdk.field.onValueChanged(setValue))
+export function App({ sdk, initial = { x: 0, y: 0 }, width = 300, height = 150 }: Props) {
+  const [value, setValue] = useState<Coordinate>(initial)
+  useSDKSetup(sdk, setValue)
 
-  useEffect(() => {
-    sdk.window.startAutoResizer()
+  const ref = useSVGDraggable(
+    async (next: Coordinate) => {
+      setValue(next)
+      await sdk.field.setValue(next)
+    },
+    [sdk, setValue]
+  )
 
-    return () => {
-      if (detach.current) {
-        detach.current()
-      }
-    }
-  })
+  const maxWidth = 800
+  const maxHeight = (maxWidth / width) * height
 
-  const onChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value
-    setValue(value)
+  return (
+    <>
+      <svg width={maxWidth} height={maxHeight} viewBox={`0 0 ${width} ${height}`} ref={ref}>
+        <rect width={width} height={height} x="0" y="0" fill="#f7f9fa" />
 
-    if (value) {
-      await sdk.field.setValue(value)
-    } else {
-      await sdk.field.removeValue()
-    }
-  }, [])
+        {/** 縦 */}
+        <line strokeWidth="1" stroke="#3c80cf" x1={value.x} x2={value.x} y1="0" y2="100%" />
 
-  return <div>hello world</div>
+        {/** 横 */}
+        <line strokeWidth="1" stroke="#3c80cf" x1="0" x2="100%" y1={value.y} y2={value.y} />
+      </svg>
+    </>
+  )
 }
 
-init(sdk => {
-  render(<App sdk={sdk as FieldExtensionSDK} />, document.getElementById('root'))
+init(_sdk => {
+  const sdk = _sdk as FieldExtensionSDK<Coordinate>
+  const initial = sdk.field.getValue()
+  const { width, height } = sdk.parameters.instance as any
+
+  render(
+    <App sdk={sdk} width={width} height={height} initial={initial} />,
+    document.getElementById('root')
+  )
 })
 
 /**

@@ -1186,6 +1186,11 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.3.tgz#bdfd69d61e464dcc81b25159c270d75a73c1a636"
   integrity sha512-Il2DtDVRGDcqjDtE+rF8iqg1CArehSK84HZJCT7AMITlyXRBpuPhqGLDQMowraqqu1coEaimg4ZOqggt6L6L+A==
 
+"@types/mina@*":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@types/mina/-/mina-0.4.1.tgz#485b9f0e5d76bff08cd582bdf3f6aaab286c1d82"
+  integrity sha512-7iXlwgI5nbW7Jbg3Yui9ZQbaoV4ftq8c/2vI9cntPcqz5jRedPoL5yYk4uDxBSWsCtA8H9JEJgNLwSBL6K7dZQ==
+
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.0.tgz#e486d0d97396d79beedd0a6e33f4534ff6b4973e"
@@ -1215,6 +1220,13 @@
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
+
+"@types/snapsvg@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@types/snapsvg/-/snapsvg-0.5.0.tgz#01ca6f37ff567d01448444845f6d53c1bfe58954"
+  integrity sha512-epmNLxsCGYvg1tSodnZo5bGJ24KD0hYnALXBhr1m0k1vcMYxjEx2PETlYrrGREzGvRQnDg850DhOtghRtoDVtg==
+  dependencies:
+    "@types/mina" "*"
 
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
@@ -3542,6 +3554,11 @@ etag@~1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
+
+eve@~0.5.1:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/eve/-/eve-0.5.4.tgz#67d080b9725291d7e389e34c26860dd97f1debaa"
+  integrity sha1-Z9CAuXJSkdfjieNMJoYN2X8d66o=
 
 events@^3.0.0:
   version "3.0.0"
@@ -8349,6 +8366,20 @@ snapdragon@^0.8.1:
     source-map "^0.5.6"
     source-map-resolve "^0.5.0"
     use "^3.1.0"
+
+snapsvg-cjs@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/snapsvg-cjs/-/snapsvg-cjs-0.0.6.tgz#3b2f56af2573d3d364c3ed5bf8885745f4d2dde1"
+  integrity sha1-Oy9WryVz09Nkw+1b+IhXRfTS3eE=
+  dependencies:
+    snapsvg "0.5.1"
+
+snapsvg@0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/snapsvg/-/snapsvg-0.5.1.tgz#0caf52c79189a290746fc446cc5e863f6bdddfe3"
+  integrity sha1-DK9Sx5GJopB0b8RGzF6GP2vd3+M=
+  dependencies:
+    eve "~0.5.1"
 
 source-map-resolve@^0.5.0:
   version "0.5.2"
