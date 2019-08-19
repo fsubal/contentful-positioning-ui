@@ -5,4 +5,4 @@ module.exports = {
     require.resolve('@contentful/eslint-config-extension/jsx-a11y'),
     require.resolve('@contentful/eslint-config-extension/react')
   ]
-};
+}

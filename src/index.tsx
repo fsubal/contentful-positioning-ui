@@ -8,7 +8,7 @@ interface Props {
   sdk: FieldExtensionSDK
 }
 
-export function App ({ sdk }: Props) {
+export function App({ sdk }: Props) {
   const [value, setValue] = useState(sdk.field.getValue() || '')
   const detach = useRef<Function>(sdk.field.onValueChanged(setValue))
 
@@ -33,9 +33,7 @@ export function App ({ sdk }: Props) {
     }
   }, [])
 
-  return (
-    <div>hello world</div>
-  )
+  return <div>hello world</div>
 }
 
 init(sdk => {
