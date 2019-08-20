@@ -19,5 +19,6 @@ node_modules/
 .coverage
 
 # Build
-build/*
-!/build/index.html
+# include build/ for Github Pages
+# build/*
+# !/build/index.html
