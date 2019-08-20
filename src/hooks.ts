@@ -1,17 +1,21 @@
 import Snap from './snapsvg'
 import { useRef, useEffect, useMemo, useCallback } from 'react'
 import { FieldExtensionSDK } from 'contentful-ui-extensions-sdk'
-import { Coordinate } from './types'
+import { Coordinate, Converter } from './coordinate'
 
-export const useSDKSetup = (sdk: FieldExtensionSDK, setValue: (value: any) => void) => {
+export const useSDKSetup = (
+  sdk: FieldExtensionSDK,
+  setValue: (value: any) => void,
+  converter: Converter
+) => {
   const detach = useMemo<Function>(
     () =>
       sdk.field.onValueChanged((next: any) => {
         if (next && next.x != null && next.y != null) {
-          setValue(next)
+          setValue(converter.percent2px(next))
         }
       }),
-    []
+    [setValue, converter]
   )
 
   useEffect(() => {

@@ -1,12 +1,13 @@
 import '@contentful/forma-36-react-components/dist/styles.css'
 import './index.css'
 
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { render } from 'react-dom'
 import { init } from 'contentful-ui-extensions-sdk'
 import { useSDKSetup, useSVGDraggable } from './hooks'
-import { FieldExtensionSDK, Coordinate } from './types'
+import { FieldExtensionSDK } from './types'
 import { TextInput, FormLabel } from '@contentful/forma-36-react-components'
+import makeConverter, { Coordinate, rounded } from './coordinate'
 
 interface Props {
   sdk: FieldExtensionSDK<Coordinate>
@@ -19,22 +20,23 @@ export function App({ sdk, initial = { x: 0, y: 0 }, width = 300, height = 150 }
   const maxWidth = 800
   const ratio = maxWidth / width
   const maxHeight = ratio * height
+  const converter = useMemo(() => makeConverter(width, height), [width, height])
 
   const [{ x, y }, setValue] = useState<Coordinate>({ x: initial.x || 0, y: initial.y || 0 })
 
   useEffect(() => {
     const timer = setTimeout(() => {
       if (x != null && y != null) {
-        sdk.field.setValue({ x, y })
+        sdk.field.setValue(converter.px2percent({ x, y }))
       }
     }, 500)
 
     return () => clearTimeout(timer)
-  }, [sdk, x, y])
+  }, [sdk, x, y, converter])
 
   const ref = useSVGDraggable(setValue, 1 / ratio)
 
-  useSDKSetup(sdk, setValue)
+  useSDKSetup(sdk, setValue, converter)
 
   const onXChange = useCallback((x: number) => setValue({ x, y }), [y])
   const onYChange = useCallback((y: number) => setValue({ x, y }), [x])
@@ -51,17 +53,9 @@ export function App({ sdk, initial = { x: 0, y: 0 }, width = 300, height = 150 }
         <line ref={ref} strokeWidth="1" stroke="#3c80cf" x1="0" x2="100%" y1={y} y2={y} />
       </svg>
 
-      <CoordinateInput
-        attribute="x"
-        current={x}
-        parentLength={width}
-        onChange={onXChange}></CoordinateInput>
+      <CoordinateInput attribute="x" current={x} parentLength={width} onChange={onXChange} />
       <br />
-      <CoordinateInput
-        attribute="y"
-        current={y}
-        parentLength={height}
-        onChange={onYChange}></CoordinateInput>
+      <CoordinateInput attribute="y" current={y} parentLength={height} onChange={onYChange} />
     </>
   )
 }
@@ -87,7 +81,7 @@ function CoordinateInput({ current, onChange, parentLength, attribute }: Coordin
       <TextInput
         id={attribute}
         width="small"
-        value={((current / parentLength) * 100).toString()}
+        value={rounded((current / parentLength) * 100).toString()}
         onChange={doOnChange}
       />
     </>
