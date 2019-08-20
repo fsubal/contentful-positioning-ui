@@ -1,11 +1,9 @@
 import '@contentful/forma-36-react-components/dist/styles.css'
-import './index.css'
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { render } from 'react-dom'
 import { init } from 'contentful-ui-extensions-sdk'
 import { useSDKSetup, useSVGDraggable } from './hooks'
-import { FieldExtensionSDK } from './types'
 import { TextInput, FormLabel } from '@contentful/forma-36-react-components'
 import makeConverter, { Coordinate, rounded } from './coordinate'
 
