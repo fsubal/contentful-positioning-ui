@@ -29,16 +29,14 @@ const noop = () => undefined
 
 let origin: Coordinate | null = null
 
-export const useSVGDraggable = (
-  onChange: (next: Coordinate) => void,
-  current: Coordinate,
-  scale: number
-) => {
-  const ref = useRef<SVGSVGElement | null>(null)
+export const useSVGDraggable = (onChange: (next: Coordinate) => void, scale: number) => {
+  const ref = useRef<SVGLineElement | null>(null)
 
-  const onDragStart = useCallback(() => {
-    origin = current
-  }, [current])
+  const onDragStart = useCallback((x: number, y: number) => {
+    const start = { x: x * scale, y: y * scale }
+    onChange(start)
+    origin = start
+  }, [])
 
   const onDragMove = useCallback(
     (dx: number, dy: number) => {

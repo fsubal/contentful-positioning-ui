@@ -32,7 +32,7 @@ export function App({ sdk, initial = { x: 0, y: 0 }, width = 300, height = 150 }
     return () => clearTimeout(timer)
   }, [sdk, x, y])
 
-  const ref = useSVGDraggable(setValue, { x, y }, 1 / ratio)
+  const ref = useSVGDraggable(setValue, 1 / ratio)
 
   useSDKSetup(sdk, setValue)
 
@@ -52,14 +52,14 @@ export function App({ sdk, initial = { x: 0, y: 0 }, width = 300, height = 150 }
 
   return (
     <>
-      <svg ref={ref} width={maxWidth} height={maxHeight} viewBox={`0 0 ${width} ${height}`}>
+      <svg width={maxWidth} height={maxHeight} viewBox={`0 0 ${width} ${height}`}>
         <rect width={width} height={height} x="0" y="0" fill="#f7f9fa" />
 
         {/** 縦 */}
-        <line strokeWidth="1" stroke="#3c80cf" x1={x} x2={x} y1="0" y2="100%" />
+        <line ref={ref} strokeWidth="1" stroke="#3c80cf" x1={x} x2={x} y1="0" y2="100%" />
 
         {/** 横 */}
-        <line strokeWidth="1" stroke="#3c80cf" x1="0" x2="100%" y1={y} y2={y} />
+        <line ref={ref} strokeWidth="1" stroke="#3c80cf" x1="0" x2="100%" y1={y} y2={y} />
       </svg>
       <FormLabel htmlFor="x">x:</FormLabel>
       <TextInput id="x" width="small" value={x.toString()} onChange={onXChange} />(
