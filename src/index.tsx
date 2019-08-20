@@ -36,19 +36,8 @@ export function App({ sdk, initial = { x: 0, y: 0 }, width = 300, height = 150 }
 
   useSDKSetup(sdk, setValue)
 
-  const onXChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setValue({ x: ~~e.currentTarget.value, y })
-    },
-    [y]
-  )
-
-  const onYChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setValue({ x, y: ~~e.currentTarget.value })
-    },
-    [x]
-  )
+  const onXChange = useCallback((x: number) => setValue({ x, y }), [y])
+  const onYChange = useCallback((y: number) => setValue({ x, y }), [x])
 
   return (
     <>
@@ -61,13 +50,46 @@ export function App({ sdk, initial = { x: 0, y: 0 }, width = 300, height = 150 }
         {/** 横 */}
         <line ref={ref} strokeWidth="1" stroke="#3c80cf" x1="0" x2="100%" y1={y} y2={y} />
       </svg>
-      <FormLabel htmlFor="x">x:</FormLabel>
-      <TextInput id="x" width="small" value={x.toString()} onChange={onXChange} />(
-      {(x / width) * 100}%)
+
+      <CoordinateInput
+        attribute="x"
+        current={x}
+        parentLength={width}
+        onChange={onXChange}></CoordinateInput>
       <br />
-      <FormLabel htmlFor="y">y:</FormLabel>
-      <TextInput id="y" width="small" value={y.toString()} onChange={onYChange} />
-      {(y / height) * 100}%)
+      <CoordinateInput
+        attribute="y"
+        current={y}
+        parentLength={height}
+        onChange={onYChange}></CoordinateInput>
+    </>
+  )
+}
+
+interface CoordinateInputProps {
+  attribute: 'x' | 'y'
+  current: number
+  parentLength: number
+  onChange(next: number): void
+}
+
+function CoordinateInput({ current, onChange, parentLength, attribute }: CoordinateInputProps) {
+  const doOnChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChange((parseFloat(e.currentTarget.value) / 100) * parentLength)
+    },
+    [parentLength, onChange]
+  )
+
+  return (
+    <>
+      <FormLabel htmlFor={attribute}>{attribute}（%）</FormLabel>
+      <TextInput
+        id={attribute}
+        width="small"
+        value={((current / parentLength) * 100).toString()}
+        onChange={doOnChange}
+      />
     </>
   )
 }
