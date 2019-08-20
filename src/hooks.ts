@@ -1,5 +1,5 @@
 import Snap from './snapsvg'
-import { useRef, useEffect, useMemo } from 'react'
+import { useRef, useEffect, useMemo, useCallback } from 'react'
 import { FieldExtensionSDK } from 'contentful-ui-extensions-sdk'
 import { Coordinate } from './types'
 
@@ -7,7 +7,7 @@ export const useSDKSetup = (sdk: FieldExtensionSDK, setValue: (value: any) => vo
   const detach = useMemo<Function>(
     () =>
       sdk.field.onValueChanged((next: any) => {
-        if (next) {
+        if (next && next.x != null && next.y != null) {
           setValue(next)
         }
       }),
@@ -25,15 +25,41 @@ export const useSDKSetup = (sdk: FieldExtensionSDK, setValue: (value: any) => vo
   }, [])
 }
 
-export const useSVGDraggable = (onDrag: (next: Coordinate) => void, deps: unknown[]) => {
+const noop = () => undefined
+
+let origin: Coordinate | null = null
+
+export const useSVGDraggable = (
+  onChange: (next: Coordinate) => void,
+  current: Coordinate,
+  scale: number
+) => {
   const ref = useRef<SVGSVGElement | null>(null)
+
+  const onDragStart = useCallback(() => {
+    origin = current
+  }, [current])
+
+  const onDragMove = useCallback(
+    (dx: number, dy: number) => {
+      if (!origin) {
+        return
+      }
+
+      onChange({
+        x: origin.x + dx * scale,
+        y: origin.y + dy * scale
+      })
+    },
+    [origin, scale, onChange]
+  )
 
   useEffect(() => {
     if (!ref.current) {
-      return () => void 0
+      return noop
     }
 
-    const snap = Snap(ref.current).drag(console.log, console.log, console.log)
+    const snap = Snap(ref.current).drag(onDragMove, onDragStart, noop)
 
     return () => void snap.undrag()
   }, [ref.current])
