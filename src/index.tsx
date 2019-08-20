@@ -32,9 +32,7 @@ export function App({ sdk, initial = { x: 0, y: 0 }, width = 300, height = 150 }
     return () => clearTimeout(timer)
   }, [sdk, x, y])
 
-  const ref = useSVGDraggable(next => {
-    setValue({ x: next.x / width, y: next.y / height })
-  }, 1 / ratio)
+  const ref = useSVGDraggable(setValue, 1 / ratio)
 
   useSDKSetup(sdk, setValue)
 
@@ -53,9 +51,17 @@ export function App({ sdk, initial = { x: 0, y: 0 }, width = 300, height = 150 }
         <line ref={ref} strokeWidth="1" stroke="#3c80cf" x1="0" x2="100%" y1={y} y2={y} />
       </svg>
 
-      <CoordinateInput attribute="x" current={x} onChange={onXChange} />
+      <CoordinateInput
+        attribute="x"
+        current={x}
+        parentLength={width}
+        onChange={onXChange}></CoordinateInput>
       <br />
-      <CoordinateInput attribute="y" current={y} onChange={onYChange} />
+      <CoordinateInput
+        attribute="y"
+        current={y}
+        parentLength={height}
+        onChange={onYChange}></CoordinateInput>
     </>
   )
 }
@@ -63,15 +69,16 @@ export function App({ sdk, initial = { x: 0, y: 0 }, width = 300, height = 150 }
 interface CoordinateInputProps {
   attribute: 'x' | 'y'
   current: number
+  parentLength: number
   onChange(next: number): void
 }
 
-function CoordinateInput({ current, onChange, attribute }: CoordinateInputProps) {
+function CoordinateInput({ current, onChange, parentLength, attribute }: CoordinateInputProps) {
   const doOnChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(parseFloat(e.currentTarget.value) / 100)
+      onChange((parseFloat(e.currentTarget.value) / 100) * parentLength)
     },
-    [onChange]
+    [parentLength, onChange]
   )
 
   return (
@@ -80,7 +87,7 @@ function CoordinateInput({ current, onChange, attribute }: CoordinateInputProps)
       <TextInput
         id={attribute}
         width="small"
-        value={(current * 100).toString()}
+        value={((current / parentLength) * 100).toString()}
         onChange={doOnChange}
       />
     </>
