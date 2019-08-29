@@ -45,10 +45,10 @@ export function App({ sdk, initial = { x: 0, y: 0 }, width = 300, height = 150 }
         <rect width={width} height={height} x="0" y="0" fill="#f7f9fa" />
 
         {/** 縦 */}
-        <line ref={ref} strokeWidth="1" stroke="#3c80cf" x1={x} x2={x} y1="0" y2="100%" />
+        <line ref={ref} strokeWidth="3" stroke="#3c80cf" x1={x} x2={x} y1="0" y2="100%" />
 
         {/** 横 */}
-        <line ref={ref} strokeWidth="1" stroke="#3c80cf" x1="0" x2="100%" y1={y} y2={y} />
+        <line ref={ref} strokeWidth="3" stroke="#3c80cf" x1="0" x2="100%" y1={y} y2={y} />
       </svg>
 
       <CoordinateInput attribute="x" current={x} parentLength={width} onChange={onXChange} />
